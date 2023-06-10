@@ -6,6 +6,10 @@
             $.get("getjson",function(data, status){
                 r = JSON.parse(data)
                 var doc = document;
+                var curr_hit_err = r[9].toString();
+                var avg_hit_err = r[10].toString();
+                var user_name = r[11];
+                var user_info = r[12];
                 doc.getElementById("300g").innerHTML = r[2];
                 doc.getElementById("300").innerHTML = r[3];
                 doc.getElementById("200").innerHTML = r[4];
@@ -13,10 +17,11 @@
                 doc.getElementById("50").innerHTML = r[6];
                 doc.getElementById("0").innerHTML = r[7];
                 doc.getElementById("pp").innerHTML = r[8];
+                doc.getElementById("curr_avg").innerHTML = "Curr: " + curr_hit_err + "; Avg: " + avg_hit_err;
             });
         }
         setTimeout(function(){
-            setInterval("f()", 100);
+            setInterval("f()", 15);
         }, 1000);
         
     </script>
@@ -25,6 +30,9 @@
     .b{
         width: 400px;
         height: 350px;
+        right: 50px;
+        bottom: 20px;
+        position: fixed;
     }
     @font-face {
         font-family: "Bold_";
@@ -35,23 +43,42 @@
         font-size: 22px;
         font-weight: bold;
         color: white;
-        position:absolute;
+        position: absolute;
+    }
+    .a{
+        width: 1920px;
+        height: 1080px;
+        position: fixed;
+    }
+    .d{
+        font-family: "Bold_";
+        font-size: 22px;
+        font-weight: bold;
+        color: white;
+        position: fixed;
     }
 </style>
 <html>
-    <div style="background-color: green;" class="b">
-        <img src="/static/image/hit300g.png" style="position:absolute;left:0px;top:0px">
-        <img src="/static/image/hit300.png" style="position:absolute;left:200px;top:0px">
-        <img src="/static/image/hit200.png" style="position:absolute;left:0px;top:100px">
-        <img src="/static/image/hit100.png" style="position:absolute;left:200px;top:100px">
-        <img src="/static/image/hit50.png" style="position:absolute;left:0px;top:200px">
-        <img src="/static/image/hit0.png" style="position:absolute;left:200px;top:200px">
-        <span id="300g" class="c" style="left:90px;top:22px">0</span>
-        <span id="300" class="c" style="left:290px;top:22px">0</span>
-        <span id="200" class="c" style="left:90px;top:122px">0</span>
-        <span id="100" class="c" style="left:290px;top:122px">0</span>
-        <span id="50" class="c" style="left:90px;top:222px">0</span>
-        <span id="0" class="c" style="left:290px;top:222px">0</span>
-        <span id="pp" class="c" style="left:10px;top:300px">0.00pp</span>
+    <div style="background-color: green;" class="a">
+        <div style="background-color: green;" class="b" id="info">
+            <img src="/static/image/hit300g.png" style="position:absolute;left:0px;top:0px">
+            <img src="/static/image/hit300.png" style="position:absolute;left:200px;top:0px">
+            <img src="/static/image/hit200.png" style="position:absolute;left:0px;top:100px">
+            <img src="/static/image/hit100.png" style="position:absolute;left:200px;top:100px">
+            <img src="/static/image/hit50.png" style="position:absolute;left:0px;top:200px">
+            <img src="/static/image/hit0.png" style="position:absolute;left:200px;top:200px">
+            <span id="300g" class="c" style="left:90px;top:22px">0</span>
+            <span id="300" class="c" style="left:290px;top:22px">0</span>
+            <span id="200" class="c" style="left:90px;top:122px">0</span>
+            <span id="100" class="c" style="left:290px;top:122px">0</span>
+            <span id="50" class="c" style="left:90px;top:222px">0</span>
+            <span id="0" class="c" style="left:290px;top:222px">0</span>
+            <span id="pp" class="c" style="left:10px;top:300px">0.00pp</span>
+        </div>
+        <div>
+            <span id="curr_avg" class="d" style="left:870px;bottom:35px;">Curr: 0; Avg: 0</span>
+        </div>
+        
     </div>
+    
 </html>
