@@ -10,8 +10,8 @@ import subprocess
 import os
 
 
-devNull = open(os.devnull, 'w')
-subprocess.Popen('.\\MemServer.exe', stdout=devNull)
+devnull = open(os.devnull, 'w')
+subprocess.Popen('.\\MemServer.exe', stdout=devnull)
 conf = ConfigParser()
 conf.read('config.ini')
 port = int(conf['Settings']['Port'])
@@ -34,6 +34,8 @@ async def show():
 @app.get('/getjson')
 async def getjson():
     global curr_diff, curr_map_id
+    curr_hit_err = 0
+    avg_hit_err = 0
     r = requests.get('http://localhost:9810/getjson').content
     j = json.loads(r)
     hp = j['Beatmap']['Hp']
@@ -45,6 +47,7 @@ async def getjson():
     hit100 = j['Player']['Hit100']
     hit50 = j['Player']['Hit50']
     hit0 = j['Player']['HitMiss']
+    hit_err = j['Player']['HitErrors']
     folder_name = j['Beatmap']['FolderName']
     osu_file_name = j['Beatmap']['OsuFileName']
     mods = j['Player']['Mods']['Value']
@@ -57,9 +60,30 @@ async def getjson():
         curr_map_id = map_id
     pp = calc.performance(map).pp
     pp = str(round(pp, 2)) + 'pp'
-    return json.dumps([hp, od, hit320, hit300, hit200, hit100, hit50, hit0, pp])
+    try:
+        curr_hit_err = hit_err[-1]
+        t = 0
+        if len(hit_err) <= 100:
+            for i in hit_err:
+                t += i
+            avg_hit_err = round(t / len(hit_err), 2)
+        else:
+            for i in hit_err[-100:]:
+                t += i
+            avg_hit_err = round(t / 100, 2)
+    except:
+        pass
+    return json.dumps([hp, od, hit320, hit300, hit200, hit100, hit50, hit0, pp, curr_hit_err, avg_hit_err])
     
 
 if __name__ == '__main__':
-   print('Address: \'http://localhost:' + str(port) + '\'')
-   uvicorn.run(app, host="localhost", port=port, log_level="error")
+    print('osu!mania实时显示插件')
+    print('by 千里扯淡 2023.6')
+    print('GitHub: https://github.com/QLchedan/osumania-RealTimeInfoDisplay')
+    osu = '  ___  ____  _   _ _ \n / _ \\/ ___|| | | | |\n| | | \\___ \\| | | | |\n| |_| |___) | |_| |_|\n \\___/|____/ \\___/(_)\n                     \n'
+    print(osu)
+    print('祝您屙屎愉快！')
+    print('Address: \'http://localhost:' + str(port) + '\'')
+    print('Ctrl+C 退出')
+    uvicorn.run(app, host="localhost", port=port, log_level="error")
+    
